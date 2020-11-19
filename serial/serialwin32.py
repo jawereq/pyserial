@@ -447,6 +447,12 @@ class Serial(SerialBase):
             raise SerialException("ClearCommError failed ({!r})".format(ctypes.WinError()))
         return comstat.cbOutQue
 
+    def fileno(self):
+        """Return the underlying Windows HANDLE associated with the open port"""
+        if not self.is_open:
+            raise PortNotOpenError()
+        return self._port_handle
+
     def _cancel_overlapped_io(self, overlapped):
         """Cancel a blocking read operation, may be called from other thread"""
         # check if read operation is pending
